@@ -1,10 +1,12 @@
-var Search = () => (
+import VideoList from './VideoList.js';
+
+var Search = (props) => (
   <div className="search-bar form-inline">
-    <input className="form-control" type="text" />
+    <input className="form-control" type="text" onKeyDown={event => props.onKeyPressHandler(event)}/>
     <button className="btn hidden-sm-down">
       <span className="glyphicon glyphicon-search"></span>
     </button>
-  </div> 
+  </div>
 );
 
 // In the ES6 spec, files are "modules" and do not share a top-level scope

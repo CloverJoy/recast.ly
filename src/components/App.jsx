@@ -2,18 +2,20 @@ import VideoList from './VideoList.js';
 import VideoPlayer from './VideoPlayer.js';
 import exampleVideoData from '../data/exampleVideoData.js';
 import YOUTUBE_API_KEY from '../config/youtube.js';
+import Search from './Search.js';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       currentVideo: exampleVideoData[0],
-      videoList: exampleVideoData
+      videoList: exampleVideoData,
+      query: ''
     };
   }
 
   componentDidMount() {
-    this.props.searchYouTube({ key: YOUTUBE_API_KEY, query: 'hack reactor', max: 5 }, (data) => { this.setState({ currentVideo: data[0], videoList: data }); });
+    _.debounce(function() { this.props.searchYouTube({ key: YOUTUBE_API_KEY, query: this.state.query, max: 5 }, (data) => { this.setState({ currentVideo: data[0], videoList: data }); }); }, 500);
   }
 
   onClickHandler(event) {
@@ -27,12 +29,19 @@ class App extends React.Component {
     });
   }
 
+  onKeyPressHandler(event) {
+    console.log(this.state.query);
+    this.setState({
+      query: this.state.query + event.key
+    });
+  }
+
   render() {
     return (
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <div><h5><em>search</em> view goes here</h5></div>
+            <Search onKeyPressHandler={this.onKeyPressHandler.bind(this)}/>
           </div>
         </nav>
         <div className="row">
